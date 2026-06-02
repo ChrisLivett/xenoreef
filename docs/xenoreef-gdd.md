@@ -47,6 +47,8 @@ Current visual direction references:
 
 - [All-ages fish concept sheet](concept-art/xenoreef-all-ages-fish-sheet.png)
 - [All-ages UI mood mockup](concept-art/xenoreef-all-ages-ui-mood.png)
+- [Balanced UI mood mockup](concept-art/xenoreef-balanced-ui-mood.png)
+- [Splash poster concept](concept-art/xenoreef-splash-poster.png)
 
 ## Core Loop
 
@@ -388,6 +390,39 @@ Example MVP species names:
 - Silt Crown
 - Riftmaw
 
+## Visual Production Strategy
+
+Recommended direction: 3D-first, 2D-presented.
+
+XenoReef should use the AI concept art as mood and creature-design reference while the game loop is being proven, not as a locked final asset source. The production path should take advantage of Blender experience by building stylized fish as simple 3D models, then deciding whether to show them in Unity as real-time 3D or render them into 2D sprites/flipbooks.
+
+Prototype approach:
+
+- Use AI concept sheets and rough placeholder sprites to test the loop quickly.
+- Static fish drawings are acceptable for the earliest prototype, especially if layered with simple bobbing, blinking, squash/stretch, bubbles, and tap reactions.
+- Avoid spending production time on final art before the economy, breeding graph, and day-resolution loop are fun.
+
+Preferred MVP approach:
+
+- Build each important fish as a stylized low-poly or mid-poly Blender model.
+- Keep silhouettes exaggerated and readable from mobile distance.
+- Use simple rigs: body sway, tail bones, fin bones, eye blink, and optional mouth/jaw controls.
+- Give each fish a small animation set: idle swim, turn, eat, alert/hungry, fertile/display, mutation reaction, and sale/exit.
+- Use material variants for rarity, mutation variants, age, health, and collector value rather than fully separate meshes wherever possible.
+- Present the tank as a mostly 2.5D aquarium view, with fish swimming in depth but framed for touch readability.
+
+Rendering options:
+
+- Real-time 3D in Unity is the preferred target if performance and art direction hold up. It supports depth, growth scaling, tap reactions, feeding behavior, and natural turns.
+- Blender-rendered sprites or flipbooks are the fallback if real-time 3D becomes too expensive, inconsistent, or hard to polish on Android.
+- A hybrid is acceptable: real-time 3D for the tank, rendered portraits/icons for the Ledger, Market, Journal, and contracts.
+
+Final-art path:
+
+- If the prototype proves the game is worth investing in, hire an artist or animator to polish silhouettes, color keys, textures, UI treatment, animation timing, and creature personality.
+- Commissioned final art should preserve the all-ages strange-and-funny direction while reducing noise and improving consistency.
+- Production assets should be original, commissioned, or self-made; AI images remain concept references unless later legal and platform decisions explicitly allow otherwise.
+
 ## Android UI
 
 Primary screens:
@@ -476,8 +511,11 @@ No account system, no online leaderboard, no ads, no IAP, no complex animation p
 - Dynamic pricing uses modest supply-and-demand variation.
 - Starvation while away is not a concern in the first prototype because days do not advance without player action.
 - Stasis is slot-limited.
+- Fish art should start with AI references and placeholders, then move toward a Blender-led 3D-first pipeline. Static drawings are prototype-only; simple animated fish should be the MVP target.
 
 ## Next Documentation Step
+
+The Unity setup guide lives in [xenoreef-unity-getting-started.md](xenoreef-unity-getting-started.md).
 
 Create a mechanical spec with:
 
@@ -485,6 +523,5 @@ Create a mechanical spec with:
 - Breeding graph.
 - Mutation graph.
 - Day-resolution pseudocode.
-- MVP Unity scene list.
 - Save-game schema.
 - First playable milestone checklist.
