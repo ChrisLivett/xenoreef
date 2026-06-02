@@ -58,6 +58,21 @@ Replace as XenoReef expression:
 - Touch-first Android interface with event logs, filters, warnings, achievements, and contracts.
 - Cozy science-fantasy with a mild illicit-market edge.
 
+## Design Lessons From AFX
+
+The original game's depth came from how simple daily actions interacted with a dense species graph. XenoReef should use these lessons without copying original fish, names, values, or setting.
+
+- Make the in-game Journal/Lab central. Species entries should expose source, life cycle, feeding, breeding, mutation, and value data as the player discovers or researches it.
+- Build a real breeding/mutation graph with loops, dead ends, sterile species, mutation-only species, cross-ecotype recipes, and risky rare outcomes.
+- Treat mutation timing as economic pressure. A creature nearing mutation should force a choice: sell, freeze, breed, hold for a rare result, or accept possible death.
+- Use varied feeding styles. Predators should differ by prey family and eating style, such as largest prey, smallest prey, any suitable prey, same-species risk, or swarm feeding.
+- Separate market price from specimen worth. Buying, open-market selling, individual specimen value, contract payout, and tank value can all be related but distinct.
+- Include unlisted black-market species. Some rare creatures should be impossible to buy directly and sellable only through brokers, contracts, or reputation unlocks.
+- Preserve the final-fertile-day twist. Most creatures prefer one partner during fertility, but accept any valid partner on the last fertile day.
+- Explain every day result. The player should understand why a creature ate, starved, bred, failed to breed, mutated, died, completed a contract, or missed a deadline.
+- Let achievements act as breadcrumbs. Achievements should reward discovery and quietly teach profitable patterns, not just decorate progress.
+- Define MVP species by mechanical role, not only by count.
+
 ## Main Resources
 
 - Credits: spendable currency from black-market sales and contracts.
@@ -105,6 +120,10 @@ Each organism species has:
 - Eating style.
 - Base sell value.
 - Buy cost formula.
+- Open-market sell formula.
+- Contract value modifier.
+- Listed/unlisted market status.
+- Research visibility tier.
 - Habitat requirements.
 - Journal clues.
 
@@ -117,6 +136,9 @@ Each individual creature has:
 - Frozen/stasis flag.
 - Fertile flag.
 - Hunger state.
+- Last eaten day.
+- Lineage/parents.
+- Contract eligibility flags.
 - Habitat assignment.
 - Discovered lineage metadata.
 
@@ -138,6 +160,14 @@ Eating rules should be explicit and previewable. Examples:
 - Cannibal: may kill itself or attack the same species if starving.
 - Symbiote: reduces another species' hunger if cohabiting.
 
+Prey rules should support both broad and precise cases:
+
+- Any creature below a mass threshold.
+- A specific ecotype.
+- A specific species.
+- Same-species/self-risk when starving.
+- Stored BioMass fallback if no live prey is available.
+
 ## Breeding Model
 
 Breeding happens during day resolution.
@@ -151,12 +181,14 @@ Rules:
 - Breeding consumes energy or BioMass.
 - Breeding produces one or more juvenile creatures of the output species.
 - Breeding can fail if the tank is overcrowded, habitat conditions are wrong, or required food is missing.
+- Some species are sterile, mutation-only, or contract-only discoveries.
 
 MVP simplification:
 
 - Track individual creatures rather than schools.
 - Allow one breeding event per fertile creature per day.
 - Show "possible offspring" as hidden silhouettes until discovered.
+- Show a clear "last fertile day" warning in the Ledger and Day Report.
 
 ## Mutation Model
 
@@ -168,12 +200,21 @@ Rules:
 - Outcomes may include transformation, split into multiple species, sterility, death, or rare upgraded variant.
 - The player can freeze a creature to delay mutation.
 - Research upgrades can reveal probabilities.
+- Mutation outcomes can be individual or clutch-level, such as one rare specimen or multiple juveniles.
+- The Day Report must show the trigger age and outcome reason.
 
 Example XenoReef mutation patterns:
 
 - Glowcap Drifter: day 4, 70% becomes Prism Drifter, 30% remains stable.
 - Knifeleaf Fry: day 6, 60% becomes Bladegrazer, 20% becomes Glassgrazer, 20% dies.
 - Hollow Ray: day 9, mutates only if kept in a dark habitat.
+
+Mutation design targets:
+
+- Early species should teach predictable transformation.
+- Mid-tier species should introduce odds and death risk.
+- Rare species should include high-value but unstable outcomes.
+- At least one MVP species should be valuable specifically because it is hard to keep alive long enough to sell or breed.
 
 ## Stasis / Freeze Mechanic
 
@@ -223,6 +264,21 @@ Suggested MVP economy:
 - Variation should be meaningful enough to create timing decisions, but not so large that the game becomes a market spreadsheet.
 - Time-limited contracts can offer higher prices for specific species, creating risk/reward decisions around whether to chase a deadline or keep breeding toward longer-term goals.
 
+Value model:
+
+- Buy Price: current exchange price for listed species.
+- Open-Market Sell Price: baseline sale value for any sellable creature.
+- Specimen Worth: value of a specific creature based on species, age, mass, rarity, and condition.
+- Contract Payout: premium paid for a requested species or trait before a deadline.
+- Tank Value: total specimen worth plus installed modules.
+
+Market status:
+
+- Listed: can be bought and sold normally.
+- Unlisted: cannot be bought; can be sold only through brokers or special contracts.
+- Research Restricted: cannot be sold until the player records or unlocks the species.
+- Contraband: high payout, higher broker fees, and possible contract expiry penalties.
+
 ## Progression
 
 Phase 1: Starter Reef
@@ -242,6 +298,7 @@ Phase 3: Research Contracts
 - Contracts include time-limited black-market offers and research tasks.
 - Research unlocks better scanners, visible probabilities, new market tiers, and habitat tools.
 - Achievements reward milestones such as first mutation, first rare sale, first complete breeding chain, and high tank value.
+- Achievements should also suggest next steps, such as surviving a mutation, using stasis to preserve a breeding window, or completing a predator chain.
 
 Phase 4: Seasonal Or Optional Online
 
@@ -261,6 +318,33 @@ Target MVP:
 - 2 predator chains.
 - 1 chaotic/cannibal species.
 - 1 high-value risky species with death mutation.
+
+MVP species role matrix:
+
+| Role | Purpose | Example XenoReef Direction |
+| --- | --- | --- |
+| Starter feeder | Teaches buying, growth, and food supply. | Cheap drifter with no prey and low value. |
+| Feeder variant | Teaches simple breeding pair changes. | Alternate drifter color/strain with different hunger. |
+| Stable breeder | Teaches same-species breeding and steady profit. | Grazer that breeds reliably but sells modestly. |
+| Early predator | Teaches prey rules and food-chain risk. | Hunter that eats smallest drifters. |
+| Risky predator | Teaches high hunger and sale timing. | Hunter that becomes profitable only after several days. |
+| Mutation tutorial | Teaches predictable mutation. | Lure that always transforms on a fixed day. |
+| Probabilistic mutation | Teaches odds, research, and stasis timing. | Lure with rare useful outcome and death risk. |
+| Sterile rare | Teaches mutation-only discovery and contract value. | Beautiful pet species that cannot breed. |
+| Bridge species | Connects early and mid-tier breeding graph. | Creature needed for multiple recipes. |
+| Unlisted black-market species | Teaches broker sales and reputation. | Cannot be bought; appears only through mutation. |
+| Chaotic/cannibal species | Teaches containment and freezing. | Eats broad prey or itself if starving. |
+| High-value risky species | Teaches endgame timing in miniature. | Rare creature with huge sale value before likely death. |
+
+MVP graph targets:
+
+- At least 4 species buyable on day one.
+- At least 3 species discovered only by breeding.
+- At least 3 species discovered only by mutation.
+- At least 2 sterile species.
+- At least 2 species with death as a mutation outcome.
+- At least 1 loop where a mutation can return the player to an earlier species.
+- At least 1 contract chain that requires keeping a low-value species instead of selling it.
 
 Example XenoReef ecotypes:
 
@@ -304,6 +388,17 @@ Critical UI affordances:
 - Batch freeze/unfreeze.
 - Filter by family, habitat, risk, value, and age.
 - Tap a creature to see "will eat," "can breed with," and "mutation due."
+- Show separate values for current market price, specimen worth, and contract premium where relevant.
+- Highlight unlisted species and explain how they can be sold.
+- Show warnings for "last fertile day," "mutation next day," "contract deadline next day," and "predator will eat valuable prey."
+
+Journal reveal states:
+
+- Unknown: silhouette/name hidden.
+- Seen: name and visual unlocked after first encounter.
+- Recorded: basic lifecycle and value known after capture or sale.
+- Researched: breeding, feeding, and mutation probabilities visible.
+- Mastered: full graph links and contract preferences visible.
 
 ## Day Resolution Order
 
@@ -321,6 +416,12 @@ Proposed deterministic order:
 
 The exact order should be visible in rules help because it matters strategically.
 
+Day Report requirements:
+
+- Group events by deaths, feeding, growth, breeding, mutation, market/contract, research, and achievements.
+- For each event, show enough cause to support planning: prey chosen, hunger failure, breeding partner, mutation odds if known, and expired contract deadlines.
+- Mark surprises as new discoveries and add them to the Journal.
+
 ## First Prototype Scope
 
 Build the smallest version that proves the loop:
@@ -330,6 +431,8 @@ Build the smallest version that proves the loop:
 - 8 species.
 - One prey family.
 - One predator family.
+- One sterile mutation-only species.
+- One unlisted broker-only species.
 - Manual day advance.
 - No offline day accrual.
 - Buy/sell market.
