@@ -1,89 +1,86 @@
 # XenoReef Game Design Document
 
-Draft 0.1. This GDD uses Alien Fish Exchange only as structural inspiration. XenoReef should feel like a modern strategic idle aquarium game with its own fiction, creatures, economy, UI, and progression.
+Draft 0.2. XenoReef should feel like a modern strategic manual-day aquarium economy game with its own fiction, creatures, market, UI, and progression.
 
 ## Pitch
 
-XenoReef is a mobile idle-strategy aquarium game where players manage a compact alien reef lab, breed strange aquatic organisms, balance a living food web, discover mutations, and sell or preserve specimens to grow their operation.
+XenoReef is a mobile aquarium strategy game where players manage an artificial alien reef hidden on a moon, breed strange aquatic organisms, balance a living food web, discover mutations, and sell rare specimens into a black-market exotic pet trade.
 
-The hook is simple: every "reef day" matters. Before advancing time or closing the app, the player decides what to feed, freeze, pair, sell, or protect. The tank then resolves overnight: creatures eat, grow, breed, mutate, or die.
+The hook is simple: every "reef day" matters. The player decides what to buy, feed, freeze, pair, sell, or protect, then manually starts the next day. The reef resolves: creatures eat, grow, breed, mutate, or die, and the player decides whether to keep playing or stop after the new day begins.
 
 ## Target Platform
 
 - Primary: Android.
 - Engine: Unity.
 - Session length: 1-5 minutes for routine check-ins, 10-20 minutes for planning and collection sessions.
+- Initial time model: manual day advancement only; no waiting required.
 - Monetization assumption for the first design: premium or free prototype with no monetization. Avoid pay-to-wait and avoid mechanics that punish real-life absence too harshly.
 
 ## Design Pillars
 
-1. Strategic idle, not passive idle.
+1. Strategic day advancement, not passive waiting.
 2. Small tank, deep consequences.
 3. Discoverable biology.
 4. Cozy but slightly uncanny.
-5. Offline-first, fair, and readable.
+5. Manual-first, fair, and readable.
 
 ## Player Fantasy
 
-The player runs an independent xenobiology reef station. They are not just flipping fish for profit; they are curating living systems, meeting research contracts, restoring damaged reef biomes, and deciding which discoveries are worth risk.
+The player runs an artificial reef station concealed on a remote moon. The station looks like a research habitat from the outside, but its real business is breeding unusual aquatic life for collectors, brokers, and off-world pet dealers.
 
-This keeps the buy-breed-sell loop but changes the emotional frame from old-school exchange market to modern creature strategy and collection.
+The fantasy is entrepreneurial and slightly illicit: buy common stock, breed or mutate rarer organisms, decide which specimens to keep for future lines, and sell high-value creatures before the market shifts. Research, achievements, and contracts add modern progression without replacing the core money-making loop.
 
 ## Core Loop
 
-1. Review tank state: active species, hunger, fertility, mutation timers, threats, and contract opportunities.
-2. Make planning choices: buy stock, assign breeding pairs, freeze specimens, separate predators, sell surplus, reserve food species.
-3. Advance a reef day manually or let an offline day resolve when the player returns.
-4. Watch a concise event report: births, deaths, growth, meals, mutations, sales, completed contracts.
-5. Spend rewards on tank capacity, stasis slots, scanners, biome modules, or new starter stock.
-6. Update the collection journal and choose the next breeding target.
+1. Review tank state: individual creatures, hunger, fertility, mutation timers, threats, market prices, and contract opportunities.
+2. Make planning choices: buy stock, assign breeding pairs, freeze specimens, separate predators, sell surplus, and reserve food species.
+3. Start a new reef day manually. The game saves at the start of the new day.
+4. Watch a concise event report: births, deaths, growth, meals, mutations, sales, completed contracts, research unlocks, and achievements.
+5. Spend rewards on tank capacity, stasis slots, scanners, biome modules, black-market access, or new starter stock.
+6. Decide whether to continue into another day or stop with the new day safely saved.
 
-## What Stays Close To The Original
+## Reference Boundary
 
-| Area | Preserve |
-| --- | --- |
-| Time | Discrete day/tick resolution. |
-| Fish actions | Creatures act during the tick: eat, grow, breed, mutate, die. |
-| Economy | Buy common stock, breed higher-value stock, sell for currency. |
-| Discovery | Some species cannot be bought and must be bred or mutated. |
-| Risk | Predators can eat useful creatures; starvation matters. |
-| Planning | Freezing/stasis prevents eating, being eaten, starvation, and mutation timing. |
-| Goals | Wealth, tank value, and complete collection are all valid progress paths. |
+Original-game research lives in `../afx/docs/original-afx-reference.md`. This GDD should remain focused on XenoReef.
 
-## Where XenoReef Diverges
+Preserve as abstract mechanics:
 
-| Area | XenoReef Direction |
-| --- | --- |
-| Fiction | Reef lab, research, restoration, and contract ecology rather than Europan gourmet fish trade. |
-| Names | Fully original organism names and taxonomy. |
-| Art | Modern stylized bioluminescent reef; no reuse of old fish silhouettes, icons, or UI. |
-| Data | New formulas, values, growth rates, breeding graph, and mutation tree. |
-| UI | Touch-first Android interface with event logs, filters, warnings, and batch actions. |
-| Multiplayer | Single-player first; seasonal leaderboards later. |
-| Tone | Cozy science-fantasy with gentle humor rather than copying the original joke taxonomy. |
+- Manual day advancement.
+- Creatures eat, grow, breed, mutate, and die during day resolution.
+- Buy common stock, breed higher-value stock, and sell for currency.
+- Some species cannot be bought directly and must be discovered.
+- Predation, starvation, stasis, catalog completion, wealth, and tank value all matter.
+
+Replace as XenoReef expression:
+
+- New name, setting, currency, creature taxonomy, art, UI, prose, formulas, and progression.
+- Artificial moon reef and black-market exotic pet trade.
+- Touch-first Android interface with event logs, filters, warnings, achievements, and contracts.
+- Cozy science-fantasy with a mild illicit-market edge.
 
 ## Main Resources
 
-- Credits: spendable currency from contracts and specimen sales.
+- Credits: spendable currency from black-market sales and contracts.
 - BioMass: food and growth resource, produced by feeder species and consumed by predators.
 - Research Data: meta-progression earned by discovering species, recording mutations, and completing contracts.
-- Stasis Charges: limited daily or crafted capacity to freeze organisms.
+- Market Reputation: progression with brokers and collectors, unlocking rarer stock and higher-risk contracts.
+- Stasis Slots: limited freezing capacity; each slot can hold one creature.
 - Tank Value: total estimated value of live organisms and installed modules.
 
-## Time And Offline Model
+## Time And Save Model
 
-XenoReef should support two time modes:
+XenoReef starts with manual day advancement only.
 
-- Manual day: player taps `Advance Day` to resolve one day immediately.
-- Offline catch-up: when returning after time away, the game offers to resolve up to a capped number of days.
+- The player performs actions during the current day.
+- The player taps `Start New Day` to save and resolve the next day.
+- After the day report, the new day is active and safely saved.
+- The player can keep playing immediately or stop there.
 
-Recommended MVP rule:
+Deferred option:
 
-- One real-world hour equals one available reef day, capped at 8 stored reef days.
-- Player can preview risk before resolving multiple days.
-- If the projected outcome includes preventable starvation or predation, show warnings and allow adjustments.
+- Offline day accrual may be considered later, but it is out of scope for the first prototype.
 
-This keeps the old deliberate day-advance rhythm while making it comfortable on Android.
+This keeps the old deliberate day-advance rhythm while removing waiting pressure from the initial Android design.
 
 ## Creature Data Model
 
@@ -111,11 +108,11 @@ Each organism species has:
 - Habitat requirements.
 - Journal clues.
 
-Each individual school/colony has:
+Each individual creature has:
 
 - Species ID.
-- Count.
-- Average mass.
+- Creature ID.
+- Mass.
 - Age.
 - Frozen/stasis flag.
 - Fertile flag.
@@ -136,9 +133,9 @@ Eating rules should be explicit and previewable. Examples:
 
 - Grazer: consumes BioMass only.
 - Filterer: produces small BioMass if not overcrowded.
-- Hunter: eats the largest suitable prey school.
+- Hunter: eats the largest suitable prey creature.
 - Swarm: eats many tiny prey.
-- Cannibal: may consume its own school if starving.
+- Cannibal: may kill itself or attack the same species if starving.
 - Symbiote: reduces another species' hunger if cohabiting.
 
 ## Breeding Model
@@ -147,18 +144,18 @@ Breeding happens during day resolution.
 
 Rules:
 
-- A school becomes fertile at a species-specific age.
+- An individual creature becomes fertile at a species-specific age.
 - By default, the fertile window lasts from fertility start until that species' mutation day.
 - Most species prefer one partner.
 - During the last fertile day, a species may accept any valid partner.
 - Breeding consumes energy or BioMass.
-- Breeding produces a juvenile school of the output species.
+- Breeding produces one or more juvenile creatures of the output species.
 - Breeding can fail if the tank is overcrowded, habitat conditions are wrong, or required food is missing.
 
 MVP simplification:
 
-- Use school-level breeding rather than tracking individual organisms.
-- Allow one breeding event per fertile school per day.
+- Track individual creatures rather than schools.
+- Allow one breeding event per fertile creature per day.
 - Show "possible offspring" as hidden silhouettes until discovered.
 
 ## Mutation Model
@@ -169,7 +166,7 @@ Rules:
 
 - Species can have a mutation check at a specific age.
 - Outcomes may include transformation, split into multiple species, sterility, death, or rare upgraded variant.
-- The player can freeze a school to delay mutation.
+- The player can freeze a creature to delay mutation.
 - Research upgrades can reveal probabilities.
 
 Example XenoReef mutation patterns:
@@ -200,9 +197,9 @@ Limits:
 
 Players earn Credits through:
 
-- Selling surplus organisms.
-- Completing research contracts.
-- Completing conservation requests.
+- Selling surplus organisms into the regular black-market exchange.
+- Completing broker contracts for specific fish.
+- Completing research contracts that unlock new knowledge or tools.
 - Discovering first-time species.
 - Maintaining target tank value milestones.
 
@@ -214,6 +211,7 @@ Costs:
 - Food reserves.
 - Scanners and journal upgrades.
 - Tank expansion.
+- Broker fees or deposits for high-value contracts.
 
 Suggested MVP economy:
 
@@ -221,7 +219,9 @@ Suggested MVP economy:
 - Mid-tier predators are profitable but risky.
 - Rare species are discovered through breeding/mutation and are usually not directly buyable.
 - Sales create short-term cash but may set back discovery chains.
-- Market prices should fluctuate from typical values using a simple stock-sensitive modifier, where scarce species become more expensive to buy and abundant species become less valuable to sell.
+- Market prices should fluctuate from typical values using a modest supply-and-demand modifier, where scarce species become more expensive to buy and abundant species become less valuable to sell.
+- Variation should be meaningful enough to create timing decisions, but not so large that the game becomes a market spreadsheet.
+- Time-limited contracts can offer higher prices for specific species, creating risk/reward decisions around whether to chase a deadline or keep breeding toward longer-term goals.
 
 ## Progression
 
@@ -238,8 +238,10 @@ Phase 2: Habitat Strategy
 
 Phase 3: Research Contracts
 
-- Add rotating objectives such as "breed three stable filterers" or "deliver a predator above 2kg."
-- Contracts gently teach breeding chains.
+- Add rotating objectives such as "deliver a predator above 2kg," "supply a live bonded pair," or "record a mutation."
+- Contracts include time-limited black-market offers and research tasks.
+- Research unlocks better scanners, visible probabilities, new market tiers, and habitat tools.
+- Achievements reward milestones such as first mutation, first rare sale, first complete breeding chain, and high tank value.
 
 Phase 4: Seasonal Or Optional Online
 
@@ -248,7 +250,7 @@ Phase 4: Seasonal Or Optional Online
 
 ## MVP Species Direction
 
-Use original structure, not original content.
+Use the reference structure, not reference content.
 
 Target MVP:
 
@@ -287,11 +289,12 @@ Example MVP species names:
 Primary screens:
 
 - Tank: visual aquarium, alerts, quick actions.
-- Ledger: all active schools with age, hunger, value, fertility, mutation timer, and stasis state.
+- Ledger: all active creatures with age, hunger, value, fertility, mutation timer, and stasis state.
 - Market: buy, sell, and contract offers.
 - Breeding: pair planner and discovered lineage graph.
 - Journal: species catalog, clues, discovered outcomes.
 - Lab: upgrades, habitats, stasis slots.
+- Achievements: milestone rewards and collection progress.
 - Day Report: compact log after each resolved day.
 
 Critical UI affordances:
@@ -310,7 +313,7 @@ Proposed deterministic order:
 2. Apply habitat effects.
 3. Consume food / prey.
 4. Apply starvation damage or death.
-5. Grow surviving active schools.
+5. Grow surviving active creatures.
 6. Resolve breeding.
 7. Resolve mutation.
 8. Update values, contracts, and journal.
@@ -328,8 +331,11 @@ Build the smallest version that proves the loop:
 - One prey family.
 - One predator family.
 - Manual day advance.
-- Offline day accrual capped at 3 days.
+- No offline day accrual.
 - Buy/sell market.
+- Time-limited contracts.
+- Research unlocks.
+- Achievements.
 - Stasis slots.
 - Breeding output table.
 - Mutation table.
@@ -338,14 +344,15 @@ Build the smallest version that proves the loop:
 
 No account system, no online leaderboard, no ads, no IAP, no complex animation pipeline.
 
-## Open Design Questions
+## Current Design Decisions
 
-- Should offline days auto-resolve or require confirmation? Recommendation: require confirmation.
-- Should species be represented as individual creatures or schools? Recommendation: schools for MVP.
-- Should contracts replace pure selling as the main income source? Recommendation: both, with contracts teaching strategy.
-- How complex should dynamic pricing be? Recommendation: start with a transparent stock-based modifier and avoid hidden market simulation until the core loop is fun.
-- How punishing should starvation be while the player is away? Recommendation: cap offline resolution and warn before applying severe loss.
-- Should stasis be free but slot-limited, or consume charges? Recommendation: slot-limited first.
+- Days are manually triggered; there is no waiting or automatic offline resolution in the first prototype.
+- The game saves as each new day starts. The player acts, starts a new day, reviews results, then can continue or stop.
+- Species are represented as individual creatures, not schools.
+- Selling and contracts both matter. Contracts add targeted risk/reward opportunities without replacing regular sales.
+- Dynamic pricing uses modest supply-and-demand variation.
+- Starvation while away is not a concern in the first prototype because days do not advance without player action.
+- Stasis is slot-limited.
 
 ## Next Documentation Step
 

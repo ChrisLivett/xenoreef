@@ -1,6 +1,6 @@
 # Alien Fish Exchange Reference Notes
 
-Working research notes for understanding the original game loop before designing XenoReef. This is not a reproduction spec. It records observed mechanics and source links so XenoReef can preserve the broad strategic feel without using original names, species, art, UI, fiction, values, or content.
+Working research notes for understanding the original Alien Fish Exchange game loop. This is not a reproduction spec. It records observed mechanics and source links for historical/reference purposes.
 
 ## Source Status
 
@@ -15,6 +15,11 @@ Primary sources currently checked:
 - Sample species pages:
   - https://web.archive.org/web/20031219032012id_/http://alienfishexchange.com:80/guide/red.html
   - https://web.archive.org/web/20031219032012id_/http://alienfishexchange.com:80/guide/acute.html
+- Local TV screenshots in `afx/images/`, especially:
+  - `tv-image3.gif` and `tv-image4.gif` for tank/dashboard stats.
+  - `tv-image5.gif`, `tv-image8.gif`, and `tv-image10.gif` through `tv-image14.gif` for the in-game Breeder's Bible.
+  - `tv-image16.gif` and `tv-image17.gif` for market buying.
+  - `tv-image18.gif` through `tv-image23.gif` for tank, fish detail, freeze, and freezer screens.
 
 Secondary sources:
 
@@ -26,13 +31,32 @@ Secondary sources:
 
 Alien Fish Exchange was a persistent asynchronous breeding and trading game for mobile and interactive TV-era platforms. The player controlled a remote tank, raised alien fish, encouraged breeding and mutation, kept fish fed, sold valuable stock, and competed through network/provider leaderboards.
 
-The fiction was explicitly about alien aquatic life discovered on Europa. The market fantasy was culinary: restaurants wanted exotic off-world fish. XenoReef should not reuse this exact premise. It can keep the idle aquarium strategy shape, but should move to a different fiction such as exobiology research, reef restoration, contract breeding, or sanctuary commerce.
+The fiction was explicitly about alien aquatic life discovered on Europa. The market fantasy was culinary: restaurants wanted exotic off-world fish.
+
+## TV Interface Notes
+
+The TV screenshots show a compact 4:3-ish game viewport with a persistent right-hand status/action sidebar. The sidebar includes:
+
+- Alien Fish logo.
+- Current cash, displayed with `Ku` currency formatting.
+- Context labels such as `Sell fish`, `OK!`, or `Guide`.
+- Icon buttons for major actions and screens.
+
+The tank screen shows animated fish in a side-on aquarium scene with rocks/coral. A separate status screen shows summary values:
+
+- Day.
+- Fish.
+- Schools.
+- Cash.
+- Value.
+
+One screenshot shows a Day 1 summary with Fish 100, Schools 1, Cash Ku10000, and Value Ku10000. This confirms that the original tracked both individual fish count and school/group count.
 
 ## Verified Core Loop
 
-1. Player owns a tank containing schools of fish.
+1. Player owns a tank containing fish. The TV interface displays individual fish/counts while also tracking schools as a separate stat.
 2. Player buys fish from the Exchange when available.
-3. Player waits or manually advances to a new day.
+3. Player manually advances to a new day.
 4. Fish act at night: they eat, grow, breed, mutate, or die.
 5. Player manages food-chain risk because fish can eat other fish.
 6. Player sells fish for currency.
@@ -57,7 +81,7 @@ The source index also included provider-specific leaderboards, suggesting the li
 
 ## Time Model
 
-The game appears turn-like rather than real-time. The player initiates or waits for a daily tick. During the nightly tick, fish process their actions.
+The game appears turn-like rather than real-time. The player initiates a daily tick. During the nightly tick, fish process their actions.
 
 Observed effects during day advance:
 
@@ -90,10 +114,41 @@ Individual species pages expose a consistent data structure:
 - Estimated value per fish.
 - Estimated profit per fish.
 
+The TV version exposed the same kind of information through an in-game Breeder's Bible. Screenshots show alphabetical/family tabs such as `A - B`, `C - F`, `G - R`, `S - Z`, and `Help`, plus species-detail tabs:
+
+- Info.
+- Source.
+- Life Cycle.
+- Feeding.
+- Value.
+
 Two sampled species demonstrate the range:
 
 - A basic prey species can be tiny, fertile almost immediately, unable to eat other fish, useful as food stock, and low value.
 - A higher-value predator can be much heavier, take longer to become fertile, eat a whole prey family, and have mutation outcomes that include death or conversion into another species.
+
+The TV screenshots also show a selected-fish detail screen for a Red Sprat with:
+
+- Count/name: 1 Red Sprat.
+- Age: 0 days.
+- Weight: 2g.
+- Worth: Ku4.
+- Action buttons including sell and freeze.
+
+This suggests the player-facing interface dealt with concrete fish or small counted groups, even though the simulation also used a "schools" concept.
+
+## TV Guide Sample: Friendly Grouper
+
+The Friendly Grouper screenshots demonstrate how a full species entry appeared in the TV Breeder's Bible:
+
+- Info tab: short species flavor text and artwork.
+- Source tab: buyable from AliFEx, no direct "bred from" entry, and mutation sources including Kant's Philosofish, Manx Catfish, and Ultra-violet Sprat.
+- Life Cycle tab: birth weight 3000g, target weight 18000g, daily growth 833g, fertile on Day 10, and mutation on Day 19 with an 80% death chance and 20% Jovian Piranha outcome.
+- Breeding section: multiple partner-to-offspring rules are listed on the same page, with the self/preferred row visually emphasized.
+- Feeding tab: prey includes all Sprat and all Eel, hunger is 10% of body weight per day, and eating style is any suitable prey.
+- Value tab: typical sell price Ku120000, typical buy price Ku15 per gram, estimated value Ku270000, and estimated profit Ku142985.
+
+This confirms the TV version exposed the same strategic data as the website, but in a tabbed in-game UI optimized for remote-control navigation.
 
 ## Species Catalog
 
@@ -113,7 +168,9 @@ The archive fish index lists 47 fish split across 11 families:
 | Piranha       |     4 | Invisible, Ionic, Jovian, Nano                           |
 | Sprat         |     7 | Blue, Green, Grey, Rainbow, Red, Ultra-violet, White     |
 
-These names and family concepts are useful only for understanding structure. XenoReef should not reuse them.
+These names and family concepts are useful only for understanding the original game's structure.
+
+Per-fish detail pages generated from the archived Breeder's Bible species pages live in `fish/`. Each file contains the fish's notes, source data, life cycle, breeding rules, feeding data, and value data.
 
 ## Breeding Model
 
@@ -126,6 +183,8 @@ Verified behavior:
 - Species pages list breeding outcomes in the form "partner species => offspring species."
 - Same-species and cross-species pairings both exist.
 - Some fish are not purchasable and must be discovered through breeding or mutation.
+
+The in-game TV guide confirms that breeding recipes were visible inside the game, not only on the website. For example, the Friendly Grouper Life Cycle tab lists its fertility day, mutation day/outcomes, and multiple partner-to-offspring pairings.
 
 ## Mutation Model
 
@@ -151,6 +210,8 @@ Verified behavior:
 
 Design implication: the economy is not just buy low/sell high. Food-web management creates risk, loss, and planning pressure.
 
+The TV guide's Feeding tab for Friendly Grouper shows the same field structure as the web guide: prey list, hunger rate, and eating style.
+
 ## Market And Economy
 
 Verified behavior:
@@ -160,11 +221,19 @@ Verified behavior:
 - Species pages estimate value and profit.
 - Buy availability varies by species.
 - Leaderboards rank cash and tank value, so liquid money and living inventory both matter.
+- The TV market shows current per-fish purchase prices in Kudos.
+- The TV buy screen shows the current Exchange price, how many fish the player can afford, a quantity entry field, and total cost.
 
 User recollection:
 
 - Prices fluctuated dynamically.
 - The exact formula is unknown, but lower stock levels may have increased prices.
+
+Screenshot examples:
+
+- A Sprat market screen lists current prices for Blue, Green, Grey, Red, and White Sprat.
+- A Blue Sprat buy screen shows a current Exchange price of Ku51 each and calculates that the player can afford 195 fish with Ku9950 cash.
+- The Red Sprat detail screen shows a separate current worth value for the selected fish/count, suggesting sale value was based on the fish itself and not only the market list price.
 
 Open questions:
 
@@ -180,42 +249,19 @@ The FAQ frames freezing as a strategic pause state. Use cases:
 - Prevent a predator from eating valuable or needed stock.
 - Delay breeding or mutation timing.
 
-This is a strong candidate for XenoReef because it converts idle play into planning rather than passive waiting.
+This makes freezing a major planning lever in the original game's daily rhythm.
+
+The TV screenshots show a distinct freeze flow:
+
+- The selected fish detail screen includes a freeze action.
+- A confirmation screen says the player has frozen the selected fish/count.
+- A separate freezer-like screen shows frozen fish against an icy white background.
+- A frozen fish detail screen labels the fish as frozen and keeps its age, weight, worth, and description visible.
 
 ## Multiplayer And Persistence
 
 The game was multiplayer in an asynchronous ranking sense. The site advertised persistent-world mobile play, while leaderboards showed rankings by provider and by world.
 
-For XenoReef, this should be optional and delayed. The single-player design should work first, with online leaderboards or seasonal events only after the local economy is satisfying.
-
 ## Platform Notes
 
 The archived distribution page lists US, Canada, UK, Europe, and Australia mobile/web partners. Secondary sources and old wiki notes also mention interactive TV via Sky/ntl. The original design was therefore constrained by low-bandwidth, low-input devices, which likely explains the turn-like "new day" loop and compact text-heavy guide.
-
-## Legal And Creative Guardrails
-
-Not legal advice, but for a safer original game:
-
-- Do not use the original name or confusingly similar branding.
-- Do not copy fish names, family names, species descriptions, art, UI, recipes, guide prose, or exact data tables.
-- Do not present the project as a sequel, remake, restoration, or official continuation.
-- Keep the abstract mechanics: aquarium management, daily tick, breeding, mutation, feeding, freezing, selling, catalog completion.
-- Replace the expressive layer: world fiction, creatures, names, art direction, interface, progression, narrative framing, formulas, and content.
-
-## XenoReef Takeaways
-
-Preserve:
-
-- Manual day advancement.
-- Offline/daily idle rhythm.
-- Species-specific growth, feeding, breeding, and mutation.
-- Food-chain risk.
-- Freeze/stasis as a core planning tool.
-- Catalog completion and wealth/tank-value goals.
-
-Diverge:
-
-- New name, setting, currency, creature taxonomy, art, UI, prose, and player fantasy.
-- Replace culinary market with research contracts, sanctuary grants, or ecosystem restoration.
-- Use modern Android ergonomics: readable cards, batch actions, alerts, collection journal, and push-notification-safe idle timers.
-- Add explicit systems clarity so the player can understand why something happened.
